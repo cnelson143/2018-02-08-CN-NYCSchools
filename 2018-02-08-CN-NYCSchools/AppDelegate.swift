@@ -7,7 +7,38 @@
 //
 
 // Added to new repo
+/*
+ 
+ Thank You for the opportunity to do this coding challenge, I enjoyed it.  I added comments primarily to the 'SchoolTableViewController'.  I generally comment most heavily when there are extremes or a complex subsystem or at the clients request.  I usually comment by the code flow and method names and property names. I did a simple test but the data is available for variety of test such as determining if there are any schools that do not have a borough, schools that have no tests and schools that have multiple test.
 
+ Additional Features
+ Changed the display name in the springboard to be NYC Schools versus the project name
+ Handles startup or data refresh while offline
+ Pull to refresh
+ Search within the table view
+ Filter table view to a specific borough
+ Changed the Nav bar colors
+ Allow calling the school over phone
+ Allow emailing the school
+ Allow visiting the school's website
+ See the school in a map
+ Select different display options for the map
+ Allow launching the iOS Maps App to get directions
+ Universal App
+
+ Known Issues:
+ Animation with pull to refresh does not always animate
+ A weak network connection may cause a delay in refreshing the filter
+
+ Additional Features:
+ I chose to focus the iPhone experience, given additional time I would have made the iPad App utilize the master / detail design pattern
+ Add additional testing fields
+ Have the schema defined outside of the data objects to allow more flexibility in displaying additional details for the school on an additional screen
+ With additional time more features would be added based on reviewing the data source schema
+
+ I am new to GitLab I believe I have the project uploaded properly and added you correctly.  Feel free to call me or reply to this email with questions, etc.
+ 
+ */
 import UIKit
 
 @UIApplicationMain
