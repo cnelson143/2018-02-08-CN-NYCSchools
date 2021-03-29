@@ -60,7 +60,7 @@ class MapViewController: UIViewController {
         }
         
         let locationText = String.init(format:"http://maps.apple.com/?daddr=%f,%f+saddr=%f,%f+dirflg=d+t=%@", arguments: [lattitude, longitude, lattitude, longitude, mapType])
-        UIApplication.shared.open(URL.init(string: locationText)!, options: [:], completionHandler: nil)
+        UIApplication.shared.open(URL.init(string: locationText)!, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
     }
     
     func addPinWithTitle(title : String, location : CLLocation)
@@ -105,4 +105,9 @@ class MapViewController: UIViewController {
     }
     */
 
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
 }

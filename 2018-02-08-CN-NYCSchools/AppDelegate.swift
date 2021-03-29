@@ -47,13 +47,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
         let navBarProxy : UINavigationBar = UINavigationBar.appearance()
         navBarProxy.barTintColor = UIColor.white
         navBarProxy.tintColor = UIColor.blue
-        navBarProxy.titleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.blue]
+        navBarProxy.titleTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor.blue]
 
         return true
     }

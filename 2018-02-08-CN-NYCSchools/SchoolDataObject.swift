@@ -28,7 +28,7 @@ class SchoolDataObject: NSObject {
     public var longitude:String?
     
     
-    public init!(schoolDictionary schoolDict: [String : String]!)
+    public init!(schoolDict: [String : String]!)
     {
         dbn = schoolDict["dbn"];
         schoolName = schoolDict["school_name"];

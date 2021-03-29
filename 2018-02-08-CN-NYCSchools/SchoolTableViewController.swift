@@ -8,10 +8,10 @@
 
 import UIKit
 
-class SchoolTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating,  UISearchBarDelegate, SelectDelegate
+class SchoolTableViewController: UIViewController, UISearchResultsUpdating,  UISearchBarDelegate, SelectDelegate
 {
     let nycSchoolURLString = "https://data.cityofnewyork.us/resource/97mf-9njv.json"
-    let nycSchoolScoreURLString = "https://data.cityofnewyork.us/resource/734v-jeq5.json";
+    let nycSchoolScoreURLString = "https://data.cityofnewyork.us/resource/734v-jeq5.json"
 
     @IBOutlet weak var tableView: UITableView!
     
@@ -50,7 +50,7 @@ class SchoolTableViewController: UIViewController, UITableViewDelegate, UITableV
 
         searchController?.delegate = self
         searchController?.hidesNavigationBarDuringPresentation = false
-        searchController?.dimsBackgroundDuringPresentation = true;
+//        searchController?.dimsBackgroundDuringPresentation = true;
         searchController?.searchBar.delegate = self; // so we can monitor text changes + others
         
         definesPresentationContext = true;  // know where you want UISearchController to be displayed
@@ -64,15 +64,9 @@ class SchoolTableViewController: UIViewController, UITableViewDelegate, UITableV
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        updateTitle()
         
-        if selectedBorough.count == 0
-        {
-            self.title = "NYC Schools2 (All)"
-        }
-        else
-        {
-            self.title = String.init(format: "NYC Schools2 (%@)", arguments: [self.selectedBorough])
-        }
         tableView.reloadData()
     }
 
@@ -106,81 +100,21 @@ class SchoolTableViewController: UIViewController, UITableViewDelegate, UITableV
                     print("No Success")
                 }
 
+                self.updateTitle()
             }
         }
     }
     
-    // MARK: - UITableViewDataSource
-    func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        
-        if (tableView == self.searchResultsTableViewController.tableView)
+    func updateTitle()
+    {
+        if selectedBorough.count == 0
         {
-            return self.searchFilteredItems.count;
-        }
-
-        return ApplicationDataObject.shared.schoolList.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "schoolCell", for: indexPath) as! SchoolTableViewCell
-        
-        var schoolDataObject : SchoolDataObject!
-        if(tableView == self.searchResultsTableViewController.tableView)
-        {
-            schoolDataObject = self.searchFilteredItems[indexPath.row];
+            self.title = "NYC Schools2 (All)"
         }
         else
         {
-            schoolDataObject = ApplicationDataObject.shared.schoolList[indexPath.row];
+            self.title = String.init(format: "NYC Schools2 (%@)", arguments: [self.selectedBorough])
         }
-
-        cell.schoolLabel.text = schoolDataObject.schoolName!
-        cell.addressLabel.text = schoolDataObject.address!
-        cell.cityStZipLabel.text = String.init(format: "%@, %@ %@", arguments: [schoolDataObject.city!, schoolDataObject.state!, schoolDataObject.zip!])
-        if let borough = schoolDataObject.borough
-        {
-            cell.boroughLabel.text = borough
-        }
-        
-        if(indexPath.row % 2 == 0)
-        {
-            cell.backgroundColor = UIColor.init(red: 225/255, green: 225/255, blue: 225/255, alpha: 1.0)
-        }
-        else
-        {
-            cell.backgroundColor = UIColor.white
-        }
-        cell.accessoryType = .disclosureIndicator
-        
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        var schoolDataObject : SchoolDataObject!
-        if(tableView == self.searchResultsTableViewController.tableView)
-        {
-            schoolDataObject = self.searchFilteredItems[indexPath.row];
-        }
-        else
-        {
-            schoolDataObject = ApplicationDataObject.shared.schoolList[indexPath.row];
-        }
-
-        self.performSegue(withIdentifier: "schoolDetailSegue", sender: schoolDataObject)
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
-        return 125
-        
     }
     
     func didPerformSelection(selection: String)
@@ -207,19 +141,6 @@ class SchoolTableViewController: UIViewController, UITableViewDelegate, UITableV
     func didCancelSelection()
     {
         self.dismiss(animated: true, completion: nil)
-    }
-    
-    // MARK: - UISearchControllerDelegate
-    
-    func willPresentSearchController(_ searchController: UISearchController) {
-        
-    }
-    
-    func willDismissSearchController(_ searchController: UISearchController) {
-        
-        self.searchFilteredItems.removeAll()
-        
-        self.tableView.reloadData()
     }
     
     // MARK: - UISearchResultsUpdating Delegate
@@ -282,3 +203,95 @@ class SchoolTableViewController: UIViewController, UITableViewDelegate, UITableV
     }
 }
 
+extension SchoolTableViewController : UITableViewDelegate
+{
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        var schoolDataObject : SchoolDataObject!
+        if(tableView == self.searchResultsTableViewController.tableView)
+        {
+            schoolDataObject = self.searchFilteredItems[indexPath.row];
+        }
+        else
+        {
+            schoolDataObject = ApplicationDataObject.shared.schoolList[indexPath.row];
+        }
+
+        self.performSegue(withIdentifier: "schoolDetailSegue", sender: schoolDataObject)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        return 125
+        
+    }
+}
+
+extension SchoolTableViewController : UITableViewDataSource
+{
+    func numberOfSections(in tableView: UITableView) -> Int {
+        // #warning Incomplete implementation, return the number of sections
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // #warning Incomplete implementation, return the number of rows
+        
+        if (tableView == self.searchResultsTableViewController.tableView)
+        {
+            return self.searchFilteredItems.count;
+        }
+
+        return ApplicationDataObject.shared.schoolList.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "schoolCell", for: indexPath) as! SchoolTableViewCell
+        
+        var schoolDataObject : SchoolDataObject!
+        if(tableView == self.searchResultsTableViewController.tableView)
+        {
+            schoolDataObject = self.searchFilteredItems[indexPath.row];
+        }
+        else
+        {
+            schoolDataObject = ApplicationDataObject.shared.schoolList[indexPath.row];
+        }
+
+        cell.schoolLabel.text = schoolDataObject.schoolName!
+        cell.addressLabel.text = schoolDataObject.address!
+        cell.cityStZipLabel.text = String.init(format: "%@, %@ %@", arguments: [schoolDataObject.city!, schoolDataObject.state!, schoolDataObject.zip!])
+        if let borough = schoolDataObject.borough
+        {
+            cell.boroughLabel.text = borough
+        }
+        
+        if(indexPath.row % 2 == 0)
+        {
+            cell.backgroundColor = UIColor.init(red: 225/255, green: 225/255, blue: 225/255, alpha: 1.0)
+        }
+        else
+        {
+            cell.backgroundColor = UIColor.white
+        }
+        cell.accessoryType = .disclosureIndicator
+        
+        return cell
+    }
+}
+
+extension SchoolTableViewController : UISearchControllerDelegate
+{
+    func willPresentSearchController(_ searchController: UISearchController) {
+        
+    }
+    
+    func willDismissSearchController(_ searchController: UISearchController) {
+        
+        self.searchFilteredItems.removeAll()
+        
+        self.tableView.reloadData()
+    }
+
+}

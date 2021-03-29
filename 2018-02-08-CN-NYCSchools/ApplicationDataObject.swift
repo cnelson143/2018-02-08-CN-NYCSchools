@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ApplicationDataObject: NSObject {
+open class ApplicationDataObject: NSObject {
 
     static let shared = ApplicationDataObject.init()
     
@@ -37,9 +37,9 @@ class ApplicationDataObject: NSObject {
                 {
                     data = try Data.init(contentsOf: URL.init(string: stringURL)!)
                     var jsonArray : Array<Dictionary<String, String>> = try JSONSerialization.jsonObject(with: data!, options: []) as! Array<Dictionary<String, String>>
-                    for schoolDict in jsonArray
+                    for dict in jsonArray
                     {
-                        let schoolData = SchoolDataObject.init(schoolDictionary: schoolDict)!
+                        let schoolData = SchoolDataObject.init(schoolDict: dict)!
                         var include = true
                         if let borough = schoolData.borough
                         {
@@ -47,7 +47,7 @@ class ApplicationDataObject: NSObject {
                             
                             if let boroughsTest = boroughs
                             {
-                                if boroughsTest.index(of: borough) == nil
+                                if boroughsTest.firstIndex(of: borough) == nil
                                 {
                                     include = false
                                 }
@@ -107,10 +107,8 @@ class ApplicationDataObject: NSObject {
                 print("Network Not Available")
                 error = NSError(domain:NSCocoaErrorDomain, code:99, userInfo:[NSLocalizedDescriptionKey: "Network not available."])
             }
-            
             completionHandler(pass, error)
         }
-        
     }
     
     open func resetSchoolData()

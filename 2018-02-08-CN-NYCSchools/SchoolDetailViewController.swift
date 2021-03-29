@@ -42,7 +42,7 @@ class SchoolDetailViewController: UIViewController, MFMailComposeViewControllerD
 //            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"dbn.lowercaseString contains[c] %@", self.schoolData.dbn.lowercaseString];
 //            NSArray *filtered = [[ApplicationDataObject sharedData].schoolScoresList filteredArrayUsingPredicate:predicate];
             let searchString = self.schoolData!.dbn!.lowercased()
-            var filtered : Array<SchoolScoresDataObject>  = ApplicationDataObject.shared.schoolScoresList.filter{$0.dbn!.lowercased().contains(searchString.lowercased())}
+            let filtered : Array<SchoolScoresDataObject>  = ApplicationDataObject.shared.schoolScoresList.filter{$0.dbn!.lowercased().contains(searchString.lowercased())}
 
             // Should be found once and only once, considering all other counts including greater than 1 to be an error condition
             if(filtered.count == 1)
@@ -111,7 +111,7 @@ class SchoolDetailViewController: UIViewController, MFMailComposeViewControllerD
         phoneNumber = schoolData!.phoneNumber!.replacingOccurrences(of: "-", with: "")
         phoneNumber = schoolData!.phoneNumber!.replacingOccurrences(of: " ", with: "")
         let phoneNumberURL = String.init(format: "tel://%@", arguments: [phoneNumber])
-        UIApplication.shared.open(URL.init(string: phoneNumberURL)!, options: [:], completionHandler: nil)
+        UIApplication.shared.open(URL.init(string: phoneNumberURL)!, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
     }
     
     @IBAction func emailButtonPressed(_ sender: UIButton)
@@ -189,4 +189,9 @@ class SchoolDetailViewController: UIViewController, MFMailComposeViewControllerD
         
     }
 
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
 }
